@@ -24,3 +24,9 @@
 ### 应用层
 
 包括具体功能逻辑的实现
+
+## 项目使用说明
+
+本项目文件是一个单独的MSPM0项目文件，从keil文件夹内的keil文件打开进行查看和使用。
+具体环境配置参考[立创开发文档环境配置](https://wiki.lckfb.com/zh-hans/tmx-mspm0g3507/training/easy-pid-beginner-kit/install.html)
+配置完成后将文件作为一个单独项目文件存放打开，自行配置keil中的头文件变量等即可使用
