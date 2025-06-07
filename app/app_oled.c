@@ -1,5 +1,6 @@
 #include "hw_systick.h"
 #include "hw_encoder.h"
+#include "hw_motor.h"
 
 #include "mid_encoder.h"
 #include "mid_oled.h"
@@ -9,6 +10,7 @@
 
 unsigned char blink_status = 0;
 uint32_t temp;
+uint8_t temp_y=10;
 
 void oled_init(void)
 {
@@ -23,6 +25,32 @@ uint32_t ABS_num(long long num)
 	return 0;
 }
 
+static void OLED_DrawWire(uint16_t height)
+{
+	uint8_t y = height ; 
+	//划定显示范围，10-30
+	if(pid_mode) y = height*20/(MOTOR_PWM_MAX+1)+10;
+	else y = height*20/360+10;
+	
+	if(y>30) y = 30;
+	else if(y<10) y = 10;
+	
+	if(y != temp_y){
+		OLED_ShowString(0,(temp_y-5),(uint8_t*)"                     ",8,1);
+		temp_y = y;
+	}
+		
+	OLED_ShowChar(5,y-4,'T',8,1);
+	OLED_DrawLine(18,y,120,y,1); //参考线	
+	
+	
+	for(uint8_t i = 18;i<128;i++)
+	{
+		OLED_DrawPoint(i,
+	}
+}
+
+
 void oled_show(void)
 {
 		// 编码器位数显示
@@ -32,9 +60,11 @@ void oled_show(void)
 		// 数字显示	
 		//temp = ABS_num(encoder_num);
 		//OLED_ShowNum(2,0,temp,5,8,1);
-		temp = ABS_num(motor_encoder.count);
-		OLED_ShowNum(30,0,temp,6,8,1);
+		//temp = ABS_num(motor_encoder.count);
+		//OLED_ShowNum(30,0,temp,6,8,1);
 		
+	
+	
 		//pid参数显示
 	
 		OLED_ShowChar(0,50,'P',8,1);
@@ -84,4 +114,8 @@ void oled_show(void)
 
 		OLED_Refresh();
 		delay_ms(250);
+		
+		//PID线显示
+		OLED_DrawWire(pid_mode?speed_pid.target:angle_pid.target);
 }
+

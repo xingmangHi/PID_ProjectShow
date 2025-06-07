@@ -21,6 +21,7 @@ void motor_update(void)
 		case 3:
 			if(pid_mode) speed_pid.kd = encoder_num / 10.0;
 			else angle_pid.kd = encoder_num / 10.0;
+			break;
 		case 4:
 			speed_pid.target = encoder_num;	
 			break;

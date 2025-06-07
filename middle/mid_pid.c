@@ -21,7 +21,6 @@ uint8_t pid_mode = 1;
 */
 float pid_compute(PID* pid,float target,float current)
 {
-	pid->target = target;
 	pid->last_error = pid->error;  //保存前一个误差
 	pid->error = target - current; //计算新的误差
 	
@@ -59,7 +58,7 @@ void pid_init(PID* pid,float p ,float i ,float d,float maxI,float maxOut,int tar
 PID motor_speed_control(int target_speed)
 {
 	int speed;
-	speed = pid_compute(&speed_pid,target_speed, get_encoder_count());
+	speed = pid_compute(&speed_pid,target_speed, get_encoder_count()*SPEED_PER_SPEED);
 	
 	if(speed > 0)
 	{
