@@ -86,23 +86,23 @@ extern "C" {
 #define PWM_MOTOR_1_INST_IRQHandler                             TIMG7_IRQHandler
 #define PWM_MOTOR_1_INST_INT_IRQN                               (TIMG7_INT_IRQn)
 #define PWM_MOTOR_1_INST_CLK_FREQ                                       10000000
-/* GPIO defines for channel 0 */
-#define GPIO_PWM_MOTOR_1_C0_PORT                                           GPIOA
-#define GPIO_PWM_MOTOR_1_C0_PIN                                   DL_GPIO_PIN_26
-#define GPIO_PWM_MOTOR_1_C0_IOMUX                                (IOMUX_PINCM59)
-#define GPIO_PWM_MOTOR_1_C0_IOMUX_FUNC               IOMUX_PINCM59_PF_TIMG7_CCP0
-#define GPIO_PWM_MOTOR_1_C0_IDX                              DL_TIMER_CC_0_INDEX
+/* GPIO defines for channel 1 */
+#define GPIO_PWM_MOTOR_1_C1_PORT                                           GPIOA
+#define GPIO_PWM_MOTOR_1_C1_PIN                                   DL_GPIO_PIN_24
+#define GPIO_PWM_MOTOR_1_C1_IOMUX                                (IOMUX_PINCM54)
+#define GPIO_PWM_MOTOR_1_C1_IOMUX_FUNC               IOMUX_PINCM54_PF_TIMG7_CCP1
+#define GPIO_PWM_MOTOR_1_C1_IDX                              DL_TIMER_CC_1_INDEX
 
 /* Defines for PWM_MOTOR_2 */
-#define PWM_MOTOR_2_INST                                                   TIMG8
-#define PWM_MOTOR_2_INST_IRQHandler                             TIMG8_IRQHandler
-#define PWM_MOTOR_2_INST_INT_IRQN                               (TIMG8_INT_IRQn)
+#define PWM_MOTOR_2_INST                                                  TIMG12
+#define PWM_MOTOR_2_INST_IRQHandler                            TIMG12_IRQHandler
+#define PWM_MOTOR_2_INST_INT_IRQN                              (TIMG12_INT_IRQn)
 #define PWM_MOTOR_2_INST_CLK_FREQ                                       10000000
 /* GPIO defines for channel 1 */
 #define GPIO_PWM_MOTOR_2_C1_PORT                                           GPIOA
-#define GPIO_PWM_MOTOR_2_C1_PIN                                   DL_GPIO_PIN_27
-#define GPIO_PWM_MOTOR_2_C1_IOMUX                                (IOMUX_PINCM60)
-#define GPIO_PWM_MOTOR_2_C1_IOMUX_FUNC               IOMUX_PINCM60_PF_TIMG8_CCP1
+#define GPIO_PWM_MOTOR_2_C1_PIN                                   DL_GPIO_PIN_25
+#define GPIO_PWM_MOTOR_2_C1_IOMUX                                (IOMUX_PINCM55)
+#define GPIO_PWM_MOTOR_2_C1_IOMUX_FUNC              IOMUX_PINCM55_PF_TIMG12_CCP1
 #define GPIO_PWM_MOTOR_2_C1_IDX                              DL_TIMER_CC_1_INDEX
 
 /* Defines for PWM_TEST */
@@ -171,17 +171,17 @@ extern "C" {
 /* Port definition for Pin Group MOTOR */
 #define MOTOR_PORT                                                       (GPIOA)
 
-/* Defines for MOTOR_A: GPIOA.24 with pinCMx 54 on package pin 25 */
+/* Defines for MOTOR_A: GPIOA.26 with pinCMx 59 on package pin 30 */
 // pins affected by this interrupt request:["MOTOR_A","MOTOR_B"]
 #define MOTOR_INT_IRQN                                          (GPIOA_INT_IRQn)
 #define MOTOR_INT_IIDX                          (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
-#define MOTOR_MOTOR_A_IIDX                                  (DL_GPIO_IIDX_DIO24)
-#define MOTOR_MOTOR_A_PIN                                       (DL_GPIO_PIN_24)
-#define MOTOR_MOTOR_A_IOMUX                                      (IOMUX_PINCM54)
-/* Defines for MOTOR_B: GPIOA.25 with pinCMx 55 on package pin 26 */
-#define MOTOR_MOTOR_B_IIDX                                  (DL_GPIO_IIDX_DIO25)
-#define MOTOR_MOTOR_B_PIN                                       (DL_GPIO_PIN_25)
-#define MOTOR_MOTOR_B_IOMUX                                      (IOMUX_PINCM55)
+#define MOTOR_MOTOR_A_IIDX                                  (DL_GPIO_IIDX_DIO26)
+#define MOTOR_MOTOR_A_PIN                                       (DL_GPIO_PIN_26)
+#define MOTOR_MOTOR_A_IOMUX                                      (IOMUX_PINCM59)
+/* Defines for MOTOR_B: GPIOA.27 with pinCMx 60 on package pin 31 */
+#define MOTOR_MOTOR_B_IIDX                                  (DL_GPIO_IIDX_DIO27)
+#define MOTOR_MOTOR_B_PIN                                       (DL_GPIO_PIN_27)
+#define MOTOR_MOTOR_B_IOMUX                                      (IOMUX_PINCM60)
 /* Port definition for Pin Group KEY */
 #define KEY_PORT                                                         (GPIOB)
 

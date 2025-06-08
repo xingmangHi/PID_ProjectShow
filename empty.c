@@ -54,7 +54,7 @@ int main(void)
 		oled_init();  //ÆÁÄ»
 		gpio_encoder_init();  //±àÂëÆ÷ÖĞ¶Ï
 		user_button_init();
-		pid_init(&speed_pid,1,0.1,0,500,500,100);
+		pid_init(&speed_pid,0.6,0.1,0,500,500,100);
 		pid_init(&angle_pid,0.5,1,0.2,500,500,180);
 	
 		timer_init();  //É¨Ãè

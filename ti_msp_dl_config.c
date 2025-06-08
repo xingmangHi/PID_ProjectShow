@@ -122,8 +122,8 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
     DL_GPIO_initPeripheralAnalogFunction(GPIO_HFXIN_IOMUX);
     DL_GPIO_initPeripheralAnalogFunction(GPIO_HFXOUT_IOMUX);
 
-    DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_MOTOR_1_C0_IOMUX,GPIO_PWM_MOTOR_1_C0_IOMUX_FUNC);
-    DL_GPIO_enableOutput(GPIO_PWM_MOTOR_1_C0_PORT, GPIO_PWM_MOTOR_1_C0_PIN);
+    DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_MOTOR_1_C1_IOMUX,GPIO_PWM_MOTOR_1_C1_IOMUX_FUNC);
+    DL_GPIO_enableOutput(GPIO_PWM_MOTOR_1_C1_PORT, GPIO_PWM_MOTOR_1_C1_PIN);
     DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_MOTOR_2_C1_IOMUX,GPIO_PWM_MOTOR_2_C1_IOMUX_FUNC);
     DL_GPIO_enableOutput(GPIO_PWM_MOTOR_2_C1_PORT, GPIO_PWM_MOTOR_2_C1_PIN);
     DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_TEST_C1_IOMUX,GPIO_PWM_TEST_C1_IOMUX_FUNC);
@@ -192,8 +192,8 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
     DL_GPIO_setUpperPinsPolarity(GPIOA, DL_GPIO_PIN_17_EDGE_RISE_FALL |
 		DL_GPIO_PIN_18_EDGE_RISE_FALL |
 		DL_GPIO_PIN_16_EDGE_RISE_FALL |
-		DL_GPIO_PIN_24_EDGE_RISE |
-		DL_GPIO_PIN_25_EDGE_RISE);
+		DL_GPIO_PIN_26_EDGE_RISE |
+		DL_GPIO_PIN_27_EDGE_RISE);
     DL_GPIO_clearInterruptStatus(GPIOA, MOTOR_MOTOR_A_PIN |
 		MOTOR_MOTOR_B_PIN);
     DL_GPIO_enableInterrupt(GPIOA, MOTOR_MOTOR_A_PIN |
@@ -268,28 +268,28 @@ SYSCONFIG_WEAK void SYSCFG_DL_PWM_MOTOR_1_init(void) {
     DL_TimerG_initPWMMode(
         PWM_MOTOR_1_INST, (DL_TimerG_PWMConfig *) &gPWM_MOTOR_1Config);
 
-    DL_TimerG_setCaptureCompareValue(PWM_MOTOR_1_INST, 500, DL_TIMER_CC_0_INDEX);
-    DL_TimerG_setCaptureCompareOutCtl(PWM_MOTOR_1_INST, DL_TIMER_CC_OCTL_INIT_VAL_HIGH,
+    DL_TimerG_setCaptureCompareValue(PWM_MOTOR_1_INST, 500, DL_TIMER_CC_1_INDEX);
+    DL_TimerG_setCaptureCompareOutCtl(PWM_MOTOR_1_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
 		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
-		DL_TIMERG_CAPTURE_COMPARE_0_INDEX);
+		DL_TIMERG_CAPTURE_COMPARE_1_INDEX);
 
-    DL_TimerG_setCaptCompUpdateMethod(PWM_MOTOR_1_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERG_CAPTURE_COMPARE_0_INDEX);
+    DL_TimerG_setCaptCompUpdateMethod(PWM_MOTOR_1_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERG_CAPTURE_COMPARE_1_INDEX);
 
     DL_TimerG_enableClock(PWM_MOTOR_1_INST);
 
 
     
-    DL_TimerG_setCCPDirection(PWM_MOTOR_1_INST , DL_TIMER_CC0_OUTPUT );
+    DL_TimerG_setCCPDirection(PWM_MOTOR_1_INST , DL_TIMER_CC1_OUTPUT );
 
 }
 /*
- * Timer clock configuration to be sourced by  / 4 (10000000 Hz)
+ * Timer clock configuration to be sourced by  / 8 (10000000 Hz)
  * timerClkFreq = (timerClkSrc / (timerClkDivRatio * (timerClkPrescale + 1)))
- *   10000000 Hz = 10000000 Hz / (4 * (0 + 1))
+ *   10000000 Hz = 10000000 Hz / (8 * (0 + 1))
  */
 static const DL_TimerG_ClockConfig gPWM_MOTOR_2ClockConfig = {
     .clockSel = DL_TIMER_CLOCK_BUSCLK,
-    .divideRatio = DL_TIMER_CLOCK_DIVIDE_4,
+    .divideRatio = DL_TIMER_CLOCK_DIVIDE_8,
     .prescale = 0U
 };
 
@@ -335,7 +335,7 @@ static const DL_TimerG_ClockConfig gPWM_TESTClockConfig = {
 static const DL_TimerG_PWMConfig gPWM_TESTConfig = {
     .pwmMode = DL_TIMER_PWM_MODE_EDGE_ALIGN,
     .period = 500,
-    .startTimer = DL_TIMER_START,
+    .startTimer = DL_TIMER_STOP,
 };
 
 SYSCONFIG_WEAK void SYSCFG_DL_PWM_TEST_init(void) {

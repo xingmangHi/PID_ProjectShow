@@ -50,7 +50,6 @@
 
 
 
-void OLED_ClearPoint(u8 x,u8 y);
 void OLED_ColorTurn(u8 i);
 void OLED_DisplayTurn(u8 i);
 void OLED_WR_Byte(u8 dat,u8 mode);

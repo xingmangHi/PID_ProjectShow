@@ -3,11 +3,6 @@
 
 #include "mid_pid.h"
 
-//每脉冲角度 k / 360/20000
-#define DEGREES_PER_PLUSE 0.018f
-//脉冲20ms扫描转速度（转/分）   k / 1000/20 /20000 
-#define SPEED_PER_SPEED 0.0025f
-
 PID angle_pid;
 PID speed_pid;
 
@@ -62,14 +57,14 @@ PID motor_speed_control(int target_speed)
 	
 	if(speed > 0)
 	{
-		//set_motor(0,speed);
-		test_motor(speed);
+		set_motor(0,speed);
+		//test_motor(speed);
 	}
 	else if(speed < 0)
 	{
 		speed = -speed;
-		//set_motor(speed,0);
-		test_motor(MOTOR_PWM_MAX); //由于只做了一个pwm，只能强制减速
+		set_motor(speed,0);
+		//test_motor(MOTOR_PWM_MAX); //由于只做了一个pwm，只能强制减速
 	}
 	return speed_pid;
 }
@@ -89,14 +84,14 @@ PID motor_angle_control(int target_angle)
 	PWM = pid_compute(&angle_pid,target_pluses,motor_encoder.temp_count);
 	if(PWM>0)
 	{
-		test_motor(PWM);
-		//set_motor(0,PWM);
+		//(PWM);
+		set_motor(0,PWM);
 	}
 	else if(PWM<0)
 	{
 		PWM = -PWM;
-		stop_motor();
-		//set_motor(PWM,0);
+		//stop_motor();
+		set_motor(PWM,0);
 	}
 	return angle_pid;
 }

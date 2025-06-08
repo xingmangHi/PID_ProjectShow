@@ -15,7 +15,7 @@ static void set_test(uint16_t dat)
 
 static void set_In1(uint16_t dat)
 {
-		DL_TimerG_setCaptureCompareValue(PWM_MOTOR_1_INST,dat,GPIO_PWM_MOTOR_1_C0_IDX);
+		DL_TimerG_setCaptureCompareValue(PWM_MOTOR_1_INST,dat,GPIO_PWM_MOTOR_1_C1_IDX);
 }
 
 static void set_In2(uint16_t dat)
