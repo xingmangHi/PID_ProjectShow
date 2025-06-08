@@ -67,7 +67,10 @@ void btn_down_cb(void *arg)
 						{
 							blink_status = 1;
 							if(pid_mode) encoder_num = speed_pid.kp*10;
-							else encoder_num = angle_pid.kp *10;
+							else{
+								stop_motor();
+								encoder_num = angle_pid.kp *10;
+							}
 						}
 						else blink_status = 0;
 						//OLED_ShowString(8,20,(uint8_t*)" ",8,1);
