@@ -39,6 +39,7 @@ void btn_up_cb(void *arg)
 							else 
 							{
 								blink_status = 5;
+								stop_motor();
 								encoder_num = angle_pid.target;
 							}
 						}
@@ -147,6 +148,7 @@ void btn_right_cb(void *arg)
 									break;
 								case 5:
 									pid_mode = 0;
+									stop_motor();
 									encoder_num = angle_pid.target;
 									break;
 								case 6:
