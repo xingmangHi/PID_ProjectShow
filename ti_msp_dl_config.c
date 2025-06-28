@@ -42,6 +42,7 @@
 
 DL_TimerG_backupConfig gPWM_MOTOR_1Backup;
 DL_TimerG_backupConfig gPWM_TESTBackup;
+DL_TimerA_backupConfig gPWM_WS2812Backup;
 DL_TimerA_backupConfig gTIMER_SCANBackup;
 
 /*
@@ -57,12 +58,15 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_PWM_MOTOR_1_init();
     SYSCFG_DL_PWM_MOTOR_2_init();
     SYSCFG_DL_PWM_TEST_init();
+    SYSCFG_DL_PWM_WS2812_init();
     SYSCFG_DL_TIMER_SCAN_init();
     SYSCFG_DL_UART_0_init();
+    SYSCFG_DL_DMA_init();
     SYSCFG_DL_SYSTICK_init();
     /* Ensure backup structures have no valid state */
 	gPWM_MOTOR_1Backup.backupRdy 	= false;
 	gPWM_TESTBackup.backupRdy 	= false;
+	gPWM_WS2812Backup.backupRdy 	= false;
 	gTIMER_SCANBackup.backupRdy 	= false;
 
 
@@ -77,6 +81,7 @@ SYSCONFIG_WEAK bool SYSCFG_DL_saveConfiguration(void)
 
 	retStatus &= DL_TimerG_saveConfiguration(PWM_MOTOR_1_INST, &gPWM_MOTOR_1Backup);
 	retStatus &= DL_TimerG_saveConfiguration(PWM_TEST_INST, &gPWM_TESTBackup);
+	retStatus &= DL_TimerA_saveConfiguration(PWM_WS2812_INST, &gPWM_WS2812Backup);
 	retStatus &= DL_TimerA_saveConfiguration(TIMER_SCAN_INST, &gTIMER_SCANBackup);
 
     return retStatus;
@@ -89,6 +94,7 @@ SYSCONFIG_WEAK bool SYSCFG_DL_restoreConfiguration(void)
 
 	retStatus &= DL_TimerG_restoreConfiguration(PWM_MOTOR_1_INST, &gPWM_MOTOR_1Backup, false);
 	retStatus &= DL_TimerG_restoreConfiguration(PWM_TEST_INST, &gPWM_TESTBackup, false);
+	retStatus &= DL_TimerA_restoreConfiguration(PWM_WS2812_INST, &gPWM_WS2812Backup, false);
 	retStatus &= DL_TimerA_restoreConfiguration(TIMER_SCAN_INST, &gTIMER_SCANBackup, false);
 
     return retStatus;
@@ -101,8 +107,10 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerG_reset(PWM_MOTOR_1_INST);
     DL_TimerG_reset(PWM_MOTOR_2_INST);
     DL_TimerG_reset(PWM_TEST_INST);
+    DL_TimerA_reset(PWM_WS2812_INST);
     DL_TimerA_reset(TIMER_SCAN_INST);
     DL_UART_Main_reset(UART_0_INST);
+
 
 
     DL_GPIO_enablePower(GPIOA);
@@ -110,8 +118,10 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerG_enablePower(PWM_MOTOR_1_INST);
     DL_TimerG_enablePower(PWM_MOTOR_2_INST);
     DL_TimerG_enablePower(PWM_TEST_INST);
+    DL_TimerA_enablePower(PWM_WS2812_INST);
     DL_TimerA_enablePower(TIMER_SCAN_INST);
     DL_UART_Main_enablePower(UART_0_INST);
+
 
     delay_cycles(POWER_STARTUP_DELAY);
 }
@@ -128,13 +138,13 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
     DL_GPIO_enableOutput(GPIO_PWM_MOTOR_2_C1_PORT, GPIO_PWM_MOTOR_2_C1_PIN);
     DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_TEST_C1_IOMUX,GPIO_PWM_TEST_C1_IOMUX_FUNC);
     DL_GPIO_enableOutput(GPIO_PWM_TEST_C1_PORT, GPIO_PWM_TEST_C1_PIN);
+    DL_GPIO_initPeripheralOutputFunction(GPIO_PWM_WS2812_C0_IOMUX,GPIO_PWM_WS2812_C0_IOMUX_FUNC);
+    DL_GPIO_enableOutput(GPIO_PWM_WS2812_C0_PORT, GPIO_PWM_WS2812_C0_PIN);
 
     DL_GPIO_initPeripheralOutputFunction(
         GPIO_UART_0_IOMUX_TX, GPIO_UART_0_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
         GPIO_UART_0_IOMUX_RX, GPIO_UART_0_IOMUX_RX_FUNC);
-
-    DL_GPIO_initDigitalOutput(WS2812_LED_PIN_IOMUX);
 
     DL_GPIO_initDigitalInputFeatures(MDR_MDR_1_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
@@ -184,9 +194,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 
     DL_GPIO_clearPins(GPIOA, OLED_A_SPI_PICO_PIN |
 		OLED_A_SPI_CS0_PIN);
-    DL_GPIO_setPins(GPIOA, WS2812_LED_PIN_PIN);
-    DL_GPIO_enableOutput(GPIOA, WS2812_LED_PIN_PIN |
-		OLED_A_SPI_PICO_PIN |
+    DL_GPIO_enableOutput(GPIOA, OLED_A_SPI_PICO_PIN |
 		OLED_A_SPI_CS0_PIN);
     DL_GPIO_setLowerPinsPolarity(GPIOA, DL_GPIO_PIN_15_EDGE_RISE_FALL);
     DL_GPIO_setUpperPinsPolarity(GPIOA, DL_GPIO_PIN_17_EDGE_RISE_FALL |
@@ -257,7 +265,7 @@ static const DL_TimerG_ClockConfig gPWM_MOTOR_1ClockConfig = {
 static const DL_TimerG_PWMConfig gPWM_MOTOR_1Config = {
     .pwmMode = DL_TIMER_PWM_MODE_EDGE_ALIGN,
     .period = 500,
-    .startTimer = DL_TIMER_START,
+    .startTimer = DL_TIMER_STOP,
 };
 
 SYSCONFIG_WEAK void SYSCFG_DL_PWM_MOTOR_1_init(void) {
@@ -360,6 +368,48 @@ SYSCONFIG_WEAK void SYSCFG_DL_PWM_TEST_init(void) {
     DL_TimerG_setCCPDirection(PWM_TEST_INST , DL_TIMER_CC1_OUTPUT );
 
 }
+/*
+ * Timer clock configuration to be sourced by  / 4 (20000000 Hz)
+ * timerClkFreq = (timerClkSrc / (timerClkDivRatio * (timerClkPrescale + 1)))
+ *   20000000 Hz = 20000000 Hz / (4 * (0 + 1))
+ */
+static const DL_TimerA_ClockConfig gPWM_WS2812ClockConfig = {
+    .clockSel = DL_TIMER_CLOCK_BUSCLK,
+    .divideRatio = DL_TIMER_CLOCK_DIVIDE_4,
+    .prescale = 0U
+};
+
+static const DL_TimerA_PWMConfig gPWM_WS2812Config = {
+    .pwmMode = DL_TIMER_PWM_MODE_EDGE_ALIGN,
+    .period = 25,
+    .isTimerWithFourCC = false,
+    .startTimer = DL_TIMER_START,
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_PWM_WS2812_init(void) {
+
+    DL_TimerA_setClockConfig(
+        PWM_WS2812_INST, (DL_TimerA_ClockConfig *) &gPWM_WS2812ClockConfig);
+
+    DL_TimerA_initPWMMode(
+        PWM_WS2812_INST, (DL_TimerA_PWMConfig *) &gPWM_WS2812Config);
+
+    DL_TimerA_setCaptureCompareValue(PWM_WS2812_INST, 25, DL_TIMER_CC_0_INDEX);
+    DL_TimerA_setCaptureCompareOutCtl(PWM_WS2812_INST, DL_TIMER_CC_OCTL_INIT_VAL_LOW,
+		DL_TIMER_CC_OCTL_INV_OUT_DISABLED, DL_TIMER_CC_OCTL_SRC_FUNCVAL,
+		DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
+
+    DL_TimerA_setCaptCompUpdateMethod(PWM_WS2812_INST, DL_TIMER_CC_UPDATE_METHOD_IMMEDIATE, DL_TIMERA_CAPTURE_COMPARE_0_INDEX);
+
+    DL_TimerA_enableClock(PWM_WS2812_INST);
+
+
+    DL_TimerA_enableInterrupt(PWM_WS2812_INST , DL_TIMER_INTERRUPT_CC0_DN_EVENT);
+
+    DL_TimerA_setCCPDirection(PWM_WS2812_INST , DL_TIMER_CC0_OUTPUT );
+    DL_TimerA_enableShadowFeatures(PWM_WS2812_INST);
+
+}
 
 
 
@@ -436,6 +486,29 @@ SYSCONFIG_WEAK void SYSCFG_DL_UART_0_init(void)
 
     DL_UART_Main_enable(UART_0_INST);
 }
+
+static const DL_DMA_Config gDMA_WS2812Config = {
+    .transferMode   = DL_DMA_SINGLE_TRANSFER_MODE,
+    .extendedMode   = DL_DMA_NORMAL_MODE,
+    .destIncrement  = DL_DMA_ADDR_UNCHANGED,
+    .srcIncrement   = DL_DMA_ADDR_INCREMENT,
+    .destWidth      = DL_DMA_WIDTH_HALF_WORD,
+    .srcWidth       = DL_DMA_WIDTH_HALF_WORD,
+    .trigger        = DMA_WS2812_TRIGGER_SEL_SW,
+    .triggerType    = DL_DMA_TRIGGER_TYPE_EXTERNAL,
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_DMA_WS2812_init(void)
+{
+    DL_DMA_clearInterruptStatus(DMA, DL_DMA_INTERRUPT_CHANNEL0);
+    DL_DMA_enableInterrupt(DMA, DL_DMA_INTERRUPT_CHANNEL0);
+    DL_DMA_setSrcIncrement(DMA, DMA_WS2812_CHAN_ID, DL_DMA_ADDR_INCREMENT);
+    DL_DMA_initChannel(DMA, DMA_WS2812_CHAN_ID , (DL_DMA_Config *) &gDMA_WS2812Config);
+}
+SYSCONFIG_WEAK void SYSCFG_DL_DMA_init(void){
+    SYSCFG_DL_DMA_WS2812_init();
+}
+
 
 SYSCONFIG_WEAK void SYSCFG_DL_SYSTICK_init(void)
 {

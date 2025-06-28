@@ -6,6 +6,7 @@
 extern volatile uint32_t delay_times;
 
 
+void delay_10_us(uint32_t us);
 void delay_ms(uint32_t ms);
 	
 #endif

@@ -36,11 +36,13 @@
 #include "hw_systick.h"
 #include "hw_timer.h"
 #include "hw_motor.h"
+#include "hw_dma.h"
 
 #include "mid_uart.h"
 #include "mid_oled.h"
 #include "mid_button.h"
 #include "mid_pid.h"
+#include "mid_ws2812.h"
 
 #include "app_oled.h"
 #include "app_motor.h"
@@ -49,19 +51,26 @@
 int main(void)
 {
     SYSCFG_DL_init();
-
-		uart0_init(); //´®¿Ú
-		oled_init();  //ÆÁÄ»
-		gpio_encoder_init();  //±àÂëÆ÷ÖÐ¶Ï
-		user_button_init();
-		pid_init(&speed_pid,0.6,0.1,0,500,500,100);
-		pid_init(&angle_pid,0.5,1,0.2,500,500,180);
+		//uart0_init(); //´®¿Ú
+		//oled_init();  //ÆÁÄ»
+		//gpio_encoder_init();  //±àÂëÆ÷ÖÐ¶Ï
+		//user_button_init();
+		//pid_init(&speed_pid,0.6,0.1,0,500,500,100);
+		//pid_init(&angle_pid,0.5,1,0.2,500,500,180);
 	
-		timer_init();  //É¨Ãè
-		stop_motor();
+		//timer_init();  //É¨Ãè
+		//stop_motor();
+		dma_init();
+		int i = 0;
+	
     while (1) {
-			oled_show();
-			motor_update();
-			//test_motor(100);
+			//oled_show();
+			//motor_update();
+		  for( i = 0; i < 2; i++ )
+          {
+            rgb_SetRGB(i,255,0,0);
+          }
+				rgb_SendArray();
+       delay_ms(3000);
 		}
 }

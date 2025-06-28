@@ -117,6 +117,18 @@ extern "C" {
 #define GPIO_PWM_TEST_C1_IOMUX_FUNC                  IOMUX_PINCM47_PF_TIMG6_CCP1
 #define GPIO_PWM_TEST_C1_IDX                                 DL_TIMER_CC_1_INDEX
 
+/* Defines for PWM_WS2812 */
+#define PWM_WS2812_INST                                                    TIMA1
+#define PWM_WS2812_INST_IRQHandler                              TIMA1_IRQHandler
+#define PWM_WS2812_INST_INT_IRQN                                (TIMA1_INT_IRQn)
+#define PWM_WS2812_INST_CLK_FREQ                                        20000000
+/* GPIO defines for channel 0 */
+#define GPIO_PWM_WS2812_C0_PORT                                            GPIOA
+#define GPIO_PWM_WS2812_C0_PIN                                    DL_GPIO_PIN_28
+#define GPIO_PWM_WS2812_C0_IOMUX                                  (IOMUX_PINCM3)
+#define GPIO_PWM_WS2812_C0_IOMUX_FUNC                 IOMUX_PINCM3_PF_TIMA1_CCP0
+#define GPIO_PWM_WS2812_C0_IDX                               DL_TIMER_CC_0_INDEX
+
 
 
 /* Defines for TIMER_SCAN */
@@ -147,12 +159,12 @@ extern "C" {
 
 
 
-/* Port definition for Pin Group WS2812 */
-#define WS2812_PORT                                                      (GPIOA)
+/* Defines for DMA_WS2812 */
+#define DMA_WS2812_CHAN_ID                                                   (0)
+#define DMA_WS2812_TRIGGER_SEL_SW                            (DMA_SOFTWARE_TRIG)
 
-/* Defines for LED_PIN: GPIOA.28 with pinCMx 3 on package pin 35 */
-#define WS2812_LED_PIN_PIN                                      (DL_GPIO_PIN_28)
-#define WS2812_LED_PIN_IOMUX                                      (IOMUX_PINCM3)
+
+
 /* Port definition for Pin Group MDR */
 #define MDR_PORT                                                         (GPIOA)
 
@@ -230,8 +242,10 @@ void SYSCFG_DL_SYSCTL_init(void);
 void SYSCFG_DL_PWM_MOTOR_1_init(void);
 void SYSCFG_DL_PWM_MOTOR_2_init(void);
 void SYSCFG_DL_PWM_TEST_init(void);
+void SYSCFG_DL_PWM_WS2812_init(void);
 void SYSCFG_DL_TIMER_SCAN_init(void);
 void SYSCFG_DL_UART_0_init(void);
+void SYSCFG_DL_DMA_init(void);
 
 void SYSCFG_DL_SYSTICK_init(void);
 

@@ -3,6 +3,7 @@
 #include "mid_encoder.h"
 #include "mid_button.h"
 #include "mid_pid.h"
+#include "mid_ws2812.h"
 
 void timer_init(void)
 {
@@ -26,4 +27,5 @@ void TIMER_SCAN_INST_IRQHandler(void)
 			default:
 				break;
 		}
+
 }

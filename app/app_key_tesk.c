@@ -8,7 +8,6 @@
 #include "app_oled.h"
 
 static char current_mode;
-static int motor_status = 0;
 
 void set_app_key_currnet_mode(char mode)
 {

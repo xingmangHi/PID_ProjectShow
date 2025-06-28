@@ -444,6 +444,11 @@
               <FileType>1</FileType>
               <FilePath>..\hardware\hw_timer.c</FilePath>
             </File>
+            <File>
+              <FileName>hw_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\hardware\hw_dma.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -478,6 +483,11 @@
               <FileName>mid_pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\middle\mid_pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>mid_ws2812.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\middle\mid_ws2812.c</FilePath>
             </File>
           </Files>
         </Group>
